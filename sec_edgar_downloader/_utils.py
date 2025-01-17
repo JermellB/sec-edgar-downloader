@@ -10,6 +10,7 @@ import requests
 from lxml import etree
 
 from ._constants import SEC_EDGAR_BASE_URL, W3_NAMESPACE
+import lxml.etree
 
 FilingMetadata = namedtuple("FilingMetadata", ["filename", "url"])
 
@@ -40,7 +41,7 @@ def form_query_string(
 
 
 def extract_elements_from_xml(xml_byte_object, xpath_selector):
-    xml_root = etree.fromstring(xml_byte_object)
+    xml_root = etree.fromstring(xml_byte_object, parser=lxml.etree.XMLParser(resolve_entities=False))
     return xml_root.xpath(xpath_selector, namespaces=W3_NAMESPACE)
 
 
