@@ -72,7 +72,7 @@ def get_filing_urls_to_download(
         )
         edgar_search_url = f"{SEC_EDGAR_BASE_URL}{qs}"
 
-        resp = requests.get(edgar_search_url)
+        resp = requests.get(edgar_search_url, timeout=60)
         resp.raise_for_status()
 
         # An HTML page is returned when an invalid ticker is entered
@@ -115,7 +115,7 @@ def get_filing_urls_to_download(
 
 def download_filings(download_folder, ticker_or_cik, filing_type, filings_to_fetch):
     for filing in filings_to_fetch:
-        resp = requests.get(filing.url)
+        resp = requests.get(filing.url, timeout=60)
         resp.raise_for_status()
 
         save_path = download_folder.joinpath(
