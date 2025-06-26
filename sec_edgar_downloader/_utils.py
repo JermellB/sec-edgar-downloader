@@ -5,11 +5,10 @@ import time
 from collections import namedtuple
 from datetime import datetime
 from urllib.parse import urlencode
-
-import requests
 from lxml import etree
 
 from ._constants import SEC_EDGAR_BASE_URL, W3_NAMESPACE
+from security import safe_requests
 
 FilingMetadata = namedtuple("FilingMetadata", ["filename", "url"])
 
@@ -72,7 +71,7 @@ def get_filing_urls_to_download(
         )
         edgar_search_url = f"{SEC_EDGAR_BASE_URL}{qs}"
 
-        resp = requests.get(edgar_search_url)
+        resp = safe_requests.get(edgar_search_url)
         resp.raise_for_status()
 
         # An HTML page is returned when an invalid ticker is entered
@@ -115,7 +114,7 @@ def get_filing_urls_to_download(
 
 def download_filings(download_folder, ticker_or_cik, filing_type, filings_to_fetch):
     for filing in filings_to_fetch:
-        resp = requests.get(filing.url)
+        resp = safe_requests.get(filing.url)
         resp.raise_for_status()
 
         save_path = download_folder.joinpath(
